@@ -1,7 +1,7 @@
+#include "student.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "student.h"
 
 void* StudentInfo(void *student) {
     struct Student *stud = student;
@@ -15,6 +15,7 @@ void* StudentInfo(void *student) {
     printf("Оценка по химии: %.1f\n", stud->chemistryGrade);
     return NULL;
 }
+
 FILE* openFile(const char *filename, const char *mode) {
     FILE *file = fopen(filename, mode);
     if (file == NULL) {
@@ -24,8 +25,7 @@ FILE* openFile(const char *filename, const char *mode) {
     return file;
 }
 
-void* Student_init(void *student, const char *lastName, const char *firstName,
-                   char gender, int age, const char *group, float mathGrade, float physicsGrade, float chemistryGrade) {
+void* Student_init(void *student, const char *lastName, const char *firstName, char gender, int age, const char *group, float mathGrade, float physicsGrade, float chemistryGrade) {
     struct Student *stud = student;
     strcpy(stud->lastName, lastName);
     strcpy(stud->firstName, firstName);
@@ -78,19 +78,19 @@ void displayStudentList(void *head) {
 
 void sortStudentsByChemistryGrade(void **head) {
     if (*head == NULL || (*((struct Node**)head))->next == NULL) {
-        return ;
+        return;
     }
 
     struct Node* sortedList = NULL;
     struct Node* current = *((struct Node**)head);
     while (current != NULL) {
         struct Node* nextNode = current->next;
-        if (sortedList == NULL || sortedList->data.mathGrade <= current->data.mathGrade) {
+        if (sortedList == NULL || sortedList->data.chemistryGrade <= current->data.chemistryGrade) {
             current->next = sortedList;
             sortedList = current;
         } else {
             struct Node* temp = sortedList;
-            while (temp->next != NULL && temp->next->data.mathGrade > current->data.mathGrade) {
+            while (temp->next != NULL && temp->next->data.chemistryGrade > current->data.chemistryGrade) {
                 temp = temp->next;
             }
             current->next = temp->next;
@@ -108,30 +108,19 @@ void LiberationStudentList(void *head) {
         free(temp);
     }
 }
+
 void saveStudentToFile(const struct Student *student, const char *filename) {
-    FILE *file = openFile(filename, "a");
-
-    fprintf(file, "Фамилия: %s\n", student->lastName);
-    fprintf(file, "Имя: %s\n", student->firstName);
-    fprintf(file, "Пол: %c\n", student->gender);
-    fprintf(file, "Возраст: %d\n", student->age);
-    fprintf(file, "Группа: %s\n", student->group);
-    fprintf(file, "Оценка по математике: %.1f\n", student->mathGrade);
-    fprintf(file, "Оценка по физике: %.1f\n", student->physicsGrade);
-    fprintf(file, "Оценка по химии: %.1f\n", student->chemistryGrade);
-    fprintf(file, "\n");
-
+    FILE *file = openFile(filename, "ab"); // Открытие в бинарном режиме на добавление
+    fwrite(student, sizeof(struct Student), 1, file);
     fclose(file);
 }
 
 void readStudentFromFile(const char *filename) {
-    FILE *file = openFile(filename, "r");
-
-    char line[100];
-
-    while (fgets(line, sizeof(line), file)) {
-        printf("%s", line);
+    FILE *file = openFile(filename, "rb"); // Открытие в бинарном режиме на чтение
+    struct Student student;
+    while (fread(&student, sizeof(struct Student), 1, file)) {
+        StudentInfo(&student);
+        printf("\n");
     }
-
     fclose(file);
 }
