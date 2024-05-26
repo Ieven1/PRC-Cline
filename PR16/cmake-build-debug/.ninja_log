@@ -1,0 +1,13 @@
+# ninja log v5
+2	59	7384456765649834	CMakeFiles/my_program.dir/main.c.obj	1e4423e2be0adaef
+61	129	7384456766323253	my_program.exe	dd3821003178b2
+5	61	7384456765674875	CMakeFiles/my_program.dir/student.c.obj	5ec6dd1bd7c85f13
+1	62	7384530371082337	CMakeFiles/my_program.dir/main.c.obj	1e4423e2be0adaef
+5	72	7384530371192438	CMakeFiles/my_program.dir/student.c.obj	5ec6dd1bd7c85f13
+73	143	7384530371858084	my_program.exe	dd3821003178b2
+8	73	7384531061164957	CMakeFiles/my_program.dir/student.c.obj	5ec6dd1bd7c85f13
+73	135	7384531061765507	my_program.exe	dd3821003178b2
+8	76	7384531537867087	CMakeFiles/my_program.dir/student.c.obj	5ec6dd1bd7c85f13
+77	143	7384531538518841	my_program.exe	dd3821003178b2
+9	73	7384538484214104	CMakeFiles/my_program.dir/student.c.obj	5ec6dd1bd7c85f13
+73	140	7384538484859765	my_program.exe	dd3821003178b2
