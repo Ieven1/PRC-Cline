@@ -32,20 +32,31 @@ int main() {
     printf("Исходные данные:\n");
     displayStudentList(head);
 
-    saveStudentToFile(&student1, "D:\\Ci\\df.txt");
-    saveStudentToFile(&student2, "D:\\Ci\\df.txt");
-    saveStudentToFile(&student3, "D:\\Ci\\df.txt");
-    saveStudentToFile(&student4, "D:\\Ci\\df.txt");
+    const char *filename = "D:\\Ci\\df.txt";
+    clearFile(filename);
+
+    saveStudentToFile(&student1, filename);
+    saveStudentToFile(&student2, filename);
+    saveStudentToFile(&student3, filename);
+    saveStudentToFile(&student4, filename);
 
     sortStudentsByChemistryGrade(&head);
 
-    printf("\nОтсортировано по оценке по химии:\n");
+    printf("\nОтсортировано по оценке по математике:\n");
     displayStudentList(head);
 
     LiberationStudentList(head);
 
+    int numStudents = 0;
+    struct Student* students = readStudentsFromFile(filename, &numStudents);
+
     printf("Содержимое файла:\n");
-    readStudentFromFile("D:\\Ci\\df.txt");
+    for (int i = 0; i < numStudents; i++) {
+        StudentInfo(&students[i]);
+        printf("\n");
+    }
+
+    free(students);
 
     return 0;
 }

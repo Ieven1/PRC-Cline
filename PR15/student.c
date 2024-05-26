@@ -110,17 +110,28 @@ void LiberationStudentList(void *head) {
 }
 
 void saveStudentToFile(const struct Student *student, const char *filename) {
-    FILE *file = openFile(filename, "ab"); // Открытие в бинарном режиме на добавление
+    FILE *file = openFile(filename, "ab");
     fwrite(student, sizeof(struct Student), 1, file);
     fclose(file);
 }
 
-void readStudentFromFile(const char *filename) {
-    FILE *file = openFile(filename, "rb"); // Открытие в бинарном режиме на чтение
-    struct Student student;
-    while (fread(&student, sizeof(struct Student), 1, file)) {
-        StudentInfo(&student);
-        printf("\n");
-    }
+struct Student* readStudentsFromFile(const char *filename, int *numStudents) {
+    FILE *file = openFile(filename, "rb");
+    fseek(file, 0, SEEK_END);
+    long fileSize = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    int studentCount = fileSize / sizeof(struct Student);
+    struct Student *students = malloc(studentCount * sizeof(struct Student));
+
+    fread(students, sizeof(struct Student), studentCount, file);
+    *numStudents = studentCount;
+
+    fclose(file);
+    return students;
+}
+
+void clearFile(const char *filename) {
+    FILE *file = openFile(filename, "wb");
     fclose(file);
 }
