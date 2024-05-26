@@ -1,0 +1,3 @@
+D:/Си Cline/PRC/PR12/cmake-build-debug/CMakeFiles/PR12.dir
+D:/Си Cline/PRC/PR12/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Си Cline/PRC/PR12/cmake-build-debug/CMakeFiles/rebuild_cache.dir
