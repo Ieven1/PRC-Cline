@@ -1,48 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "student.h"
-#include "stack.h"
-
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
-
 
 int main() {
-    struct Node* head = initNode();
+    system("chcp 65001");
+
+    void* head = NULL;
+
+    struct Student student1, student2, student3, student4;
+    Student_init(&student1, "Иванов", "Иван", 'M', 16, "Группа1", 5.0, 4.9, 1.4);
+    Student_init(&student2, "Петров", "Петр", 'M', 17, "Группа2", 3.7, 4.1, 3.2);
+    Student_init(&student3, "Сидорова", "Мария", 'F', 17, "Группа1", 4.5, 3.5, 4.3);
+    Student_init(&student4, "Алексеева", "Соня", 'F', 23, "Группа1", 4.2, 4.6, 5.0);
 
 
-    struct Student student1, student2, student3;
-    initStudent(&student1, "Иванов", "Иван", 'M', 16, "Группа1", 5.0f, 4.9f, 5.0f);
-    initStudent(&student2, "Петров", "Петр", 'M', 17, "Группа2", 3.7f, 4.1f, 5.0f);
-    initStudent(&student3, "Сидорова", "Мария", 'F', 17, "Группа1", 4.5f, 3.5f, 4.8f);
+    struct tmp {
+        void** head;
+        void *student;
+    };
+
+    struct tmp temp1 = { &head, &student1 };
+    struct tmp temp2 = { &head, &student2 };
+    struct tmp temp3 = { &head, &student3 };
+    struct tmp temp4 = { &head, &student4 };
 
 
-    struct InsertArgs insertArgs1 = { &head, &student1 };
-    head->insertNode(&insertArgs1);
+    insertNode(&temp1);
+    insertNode(&temp2);
+    insertNode(&temp3);
+    insertNode(&temp4);
 
-    struct InsertArgs insertArgs2 = { &head, &student2 };
-    head->insertNode(&insertArgs2);
-
-    struct InsertArgs insertArgs3 = { &head, &student3 };
-    head->insertNode(&insertArgs3);
 
     printf("Исходные данные:\n");
-    head->displayStudentList(head);
+    displayStudentList(head);
 
-    struct SortArgs sortArgs = { &head };
-    sortStudentsByMathGrade(&sortArgs);
+    saveStudentToFile(&student1, "D:\\Ci\\df.txt");
+    saveStudentToFile(&student2, "D:\\Ci\\df.txt");
+    saveStudentToFile(&student3, "D:\\Ci\\df.txt");
+    saveStudentToFile(&student4, "D:\\Ci\\df.txt");
+
+
+    sortStudentsByChemistryGrade(&head);
 
     printf("\nОтсортировано по оценке по математике:\n");
-    head->displayStudentList(head);
+    displayStudentList(head);
 
-    while (head != NULL) {
-        struct Node* temp = head;
-        head = head->next;
-        free(temp);
-    }
+    LiberationStudentList(head);
 
-    int a = 5, b = 10;
-    int max_value = MAX(a, b);
-    printf("Максимальное значение: %d\n", max_value);
+    printf("Содержимое файла:\n");
+    readStudentFromFile("D:\\Ci\\df.txt");
 
     return 0;
 }
