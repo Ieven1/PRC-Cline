@@ -109,29 +109,38 @@ void LiberationStudentList(void *head) {
     }
 }
 
-void saveStudentToFile(const struct Student *student, const char *filename) {
-    FILE *file = openFile(filename, "ab");
-    fwrite(student, sizeof(struct Student), 1, file);
+void save_students_to_file(struct Node* head, const char* filename) {
+    FILE* file = fopen(filename, "wb");
+    if (file == NULL) {
+        printf("Could not open file %s for writing\n", filename);
+        return;
+    }
+
+    struct Node* current = head;
+    while (current != NULL) {
+        fwrite(&(current->data), sizeof(struct Student), 1, file);
+        current = current->next;
+    }
+
     fclose(file);
+    printf("File %s saved successfully.\n", filename);
 }
 
-struct Student* readStudentsFromFile(const char *filename, int *numStudents) {
-    FILE *file = openFile(filename, "rb");
-    fseek(file, 0, SEEK_END);
-    long fileSize = ftell(file);
-    fseek(file, 0, SEEK_SET);
+struct Node* load_students_from_file(const char* filename) {
+    FILE* file = fopen(filename, "rb");
+    if (file == NULL) {
+        printf("Could not open file %s for reading\n", filename);
+        return NULL;
+    }
 
-    int studentCount = fileSize / sizeof(struct Student);
-    struct Student *students = malloc(studentCount * sizeof(struct Student));
+    struct Node* head = NULL;
+    struct Student student;
 
-    fread(students, sizeof(struct Student), studentCount, file);
-    *numStudents = studentCount;
+    while (fread(&student, sizeof(struct Student), 1, file) == 1) {
+        struct tmp data = { &head, &student };
+        insertNode(&data);
+    }
 
     fclose(file);
-    return students;
-}
-
-void clearFile(const char *filename) {
-    FILE *file = openFile(filename, "wb");
-    fclose(file);
+    return head;
 }

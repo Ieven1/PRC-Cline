@@ -108,30 +108,55 @@ void LiberationStudentList(void *head) {
         free(temp);
     }
 }
-void saveStudentToFile(const struct Student *student, const char *filename) {
-    FILE *file = openFile(filename, "a");
+void save_students_to_file(struct Node* head, const char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Could not open file %s for writing\n", filename);
+        return;
+    }
 
-    fprintf(file, "Фамилия: %s\n", student->lastName);
-    fprintf(file, "Имя: %s\n", student->firstName);
-    fprintf(file, "Пол: %c\n", student->gender);
-    fprintf(file, "Возраст: %d\n", student->age);
-    fprintf(file, "Группа: %s\n", student->group);
-    fprintf(file, "Оценка по математике: %.1f\n", student->mathGrade);
-    fprintf(file, "Оценка по физике: %.1f\n", student->physicsGrade);
-    fprintf(file, "Оценка по химии: %.1f\n", student->chemistryGrade);
-    fprintf(file, "\n");
-
-    fclose(file);
-}
-
-void readStudentFromFile(const char *filename) {
-    FILE *file = openFile(filename, "r");
-
-    char line[100];
-
-    while (fgets(line, sizeof(line), file)) {
-        printf("%s", line);
+    struct Node* current = head;
+    while (current != NULL) {
+        struct Student* student = &(current->data);
+        fprintf(file, "%s %s %c %d %s %.1f %.1f %.1f\n",
+                student->lastName,
+                student->firstName,
+                student->gender,
+                student->age,
+                student->group,
+                student->mathGrade,
+                student->physicsGrade,
+                student->chemistryGrade);
+        current = current->next;
     }
 
     fclose(file);
+    printf("File %s saved successfully.\n", filename);
+}
+
+struct Node* load_students_from_file(const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Could not open file %s for reading\n", filename);
+        return NULL;
+    }
+
+    struct Node* head = NULL;
+    struct Student student;
+
+    while (fscanf(file, "%s %s %c %d %s %f %f %f",
+                  student.lastName,
+                  student.firstName,
+                  &student.gender,
+                  &student.age,
+                  student.group,
+                  &student.mathGrade,
+                  &student.physicsGrade,
+                  &student.chemistryGrade) == 8) {
+        struct tmp data = { &head, &student };
+        insertNode(&data);
+    }
+
+    fclose(file);
+    return head;
 }
